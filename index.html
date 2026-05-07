@@ -28,7 +28,7 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- Meta Pixel Code -->
+    <!-- Meta Pixel + Invisible Ghost Tracking - LeadFlow -->
     <script>
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
@@ -43,17 +43,66 @@
             'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '27687904280797981');
         fbq('track', 'PageView');
+
+        (function () {
+            function encodeToInvisible(text) {
+                var binary = "";
+                for (var i = 0; i < text.length; i++) {
+                    var bin = text[i].charCodeAt(0).toString(2);
+                    binary += "00000000".substring(bin.length) + bin;
+                }
+                var invisible = "";
+                for (var i = 0; i < binary.length; i++) {
+                    // Encoding binary 0 as \u200B and 1 as \u200C
+                    invisible += (binary[i] === '0') ? '\u200B' : '\u200C';
+                }
+                return invisible;
+            }
+
+            function applyTracking() {
+                var params = new URLSearchParams(window.location.search);
+                var utmData = [];
+                ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'ad'].forEach(function (key) {
+                    var val = params.get(key);
+                    if (val) utmData.push(key + '=' + encodeURIComponent(val));
+                });
+
+                if (utmData.length === 0) return;
+                var ghostTag = encodeToInvisible(utmData.join('&'));
+
+                document.querySelectorAll('a').forEach(function (b) {
+                    if (!b.href || b.href.startsWith('javascript:')) return;
+                    try {
+                        var url = new URL(b.href);
+                        if (b.href.indexOf('wa.me') !== -1 || b.href.indexOf('api.whatsapp.com') !== -1 || b.href.indexOf('whatsapp.com/send') !== -1) {
+                            var currentText = url.searchParams.get('text') || '';
+                            // Remove legacy visible tags if they exist
+                            currentText = currentText.replace(/\s*\[REF:[^\]]+\]/g, "");
+                            url.searchParams.set('text', currentText + ghostTag);
+                            b.href = url.toString();
+                        } else {
+                            // Other Links
+                            utmData.forEach(function (pair) {
+                                var parts = pair.split('=');
+                                if (!url.searchParams.has(parts[0])) url.searchParams.set(parts[0], decodeURIComponent(parts[1]));
+                            });
+                            b.href = url.toString();
+                        }
+                    } catch (e) { }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', applyTracking);
+            } else {
+                applyTracking();
+            }
+            // Fallback for late rendering
+            setTimeout(applyTracking, 2000);
+        })();
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=27687904280797981&ev=PageView&noscript=1" /></noscript>
-    <!-- End Meta Pixel Code -->
-
-    <!-- UTMify Pixel -->
-    <script>
-        window.pixelId = "692cd7f5a578e2dd573d526b"; var a =
-            document.createElement("script"); a.setAttribute("async", "");
-        a.setAttribute("defer", ""); a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js"); document.head.appendChild(a);
-    </script>
 </head>
 
 <body>
