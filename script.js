@@ -97,11 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Attach tracking to buttons
     document.querySelectorAll('.track-checkout-premium').forEach(btn => {
-        btn.addEventListener('click', () => trackInitiateCheckout('Plano Premium'));
+        btn.addEventListener('click', () => trackInitiateCheckout('Kit Premium'));
     });
 
     document.querySelectorAll('.track-checkout-basic').forEach(btn => {
-        btn.addEventListener('click', () => trackInitiateCheckout('Plano Básico'));
+        btn.addEventListener('click', () => trackInitiateCheckout('Acesso Básico'));
     });
 
     document.querySelectorAll('.track-checkout-upsell').forEach(btn => {
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (basicBtn && popup) {
         basicBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            trackInitiateCheckout('Click Básico (Abre Popup)');
+            trackInitiateCheckout('Click Acesso Básico (Abre Popup)');
             popup.style.display = 'flex';
         });
 
