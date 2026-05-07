@@ -1417,3 +1417,50 @@ body {
         font-size: 2.5rem;
     }
 }
+
+/* Scroll Reveal Animations */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    visibility: hidden;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Horizontal slide variants */
+.reveal-left {
+    transform: translateX(-50px);
+}
+
+.reveal-right {
+    transform: translateX(50px);
+}
+
+.reveal-left.active, .reveal-right.active {
+    transform: translateX(0);
+}
+
+/* Premium Pulsing CTA */
+@keyframes pulse-premium {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 0 #1e7e1d, 0 0 0 0 rgba(43, 178, 42, 0.4);
+    }
+    50% {
+        transform: scale(1.02) translateY(-2px);
+        box-shadow: 0 6px 0 #1e7e1d, 0 0 0 15px rgba(43, 178, 42, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 0 #1e7e1d, 0 0 0 0 rgba(43, 178, 42, 0);
+    }
+}
+
+.btn-pulse-premium {
+    animation: pulse-premium 2s infinite ease-in-out;
+}
